@@ -7,4 +7,9 @@ public class Constants {
         public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
     }
 
+    public static class ErrorTitles {
+
+        public static final String INVALID_PARAMETER_ERROR = "Invalid parameters provided";
+    }
+
 }
