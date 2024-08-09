@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 public class AuditionController {
 
+    private transient AuditionService auditionService;
+
     @Autowired
-    AuditionService auditionService;
+    public void setAuditionService(final AuditionService auditionService) {
+        this.auditionService = auditionService;
+    }
 
     @RequestMapping(value = "/posts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<AuditionPost> getPosts() {
@@ -29,7 +33,7 @@ public class AuditionController {
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody AuditionPost getPosts(
         @PathVariable("id") final String postId,
-        @RequestParam(required = false, defaultValue = "false") Boolean includeComments
+        @RequestParam(required = false, defaultValue = "false") final Boolean includeComments
     ) {
         ValidationUtil.isNoneEmpty(postId, "postId cannot be null or empty");
         return auditionService.getPostById(postId, includeComments);

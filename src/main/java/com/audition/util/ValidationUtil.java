@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 
 public class ValidationUtil {
 
-    public static void isNoneEmpty(String parameter, String errorMessage) {
+    public static void isNoneEmpty(
+        final String parameter,
+        final String errorMessage) {
         if (StringUtils.isEmpty(parameter)) {
             throw new SystemException(
                 "Invalid parameters provided",

@@ -1,118 +1,146 @@
 package com.audition.integration;
 
+import com.audition.Constants.ErrorMessages;
 import com.audition.common.exception.SystemException;
 import com.audition.configuration.ExternalApiConfiguration;
 import com.audition.model.AuditionPost;
 import com.audition.model.AuditionPostComment;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+@Setter
 @Component
 public class AuditionIntegrationClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuditionIntegrationClient.class);
-    private final RestTemplate restTemplate;
-    private final ExternalApiConfiguration externalApiConfiguration;
-
-    public AuditionIntegrationClient(RestTemplate restTemplate, ExternalApiConfiguration externalApiConfiguration) {
-        this.restTemplate = restTemplate;
-        this.externalApiConfiguration = externalApiConfiguration;
-    }
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private ExternalApiConfiguration externalApiConfiguration;
 
     public List<AuditionPost> getPosts() {
-        String requestUrl = externalApiConfiguration.getBaseUrl().concat(externalApiConfiguration.getGetPostsPath());
+        final String requestUrl = externalApiConfiguration.getBaseUrl()
+            .concat(externalApiConfiguration.getGetPostsPath());
 
         try {
-            ResponseEntity<AuditionPost[]> response = restTemplate.getForEntity(requestUrl, AuditionPost[].class);
-            return Arrays.asList(Objects.requireNonNull(response.getBody()));
+            final AuditionPost[] body = restTemplate.getForEntity(requestUrl, AuditionPost[].class).getBody();
+            if (body != null) {
+                return Arrays.asList(body);
+            }
+            return Collections.emptyList();
         } catch (final HttpClientErrorException e) {
-            LOG.error("Error occurred while executing getPosts - requestUrl[{}] statusCode[{}] responseBody[{}]",
-                requestUrl,
-                e.getStatusCode().value(),
-                e.getResponseBodyAsString()
-            );
-            throw new SystemException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Error occurred while executing getPosts - requestUrl[{}] statusCode[{}] responseBody[{}] - ",
+                    requestUrl,
+                    e.getStatusCode().value(),
+                    e.getResponseBodyAsString(),
+                    e
+                );
+            }
+            throw new SystemException(ErrorMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(), e);
         }
     }
 
     public AuditionPost getPostById(final String id) {
-        String requestUrl = String.format(
+        final String requestUrl = String.format(
             externalApiConfiguration.getBaseUrl().concat(externalApiConfiguration.getGetSinglePostPath()),
             id
         );
         try {
             return restTemplate.getForEntity(requestUrl, AuditionPost.class).getBody();
         } catch (final HttpClientErrorException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error(
+                    "Error occurred while executing getPostById - requestUrl[{}] statusCode[{}] responseBody[{}] - ",
+                    requestUrl,
+                    e.getStatusCode().value(),
+                    e.getResponseBodyAsString(),
+                    e
+                );
+            }
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new SystemException(
                     String.format("Cannot find a Post with id - %s", id),
                     "Resource Not Found",
-                    HttpStatus.NOT_FOUND.value()
+                    HttpStatus.NOT_FOUND.value(),
+                    e
                 );
             } else {
-                LOG.error("Error occurred while executing getPostById - requestUrl[{}] statusCode[{}] responseBody[{}]",
-                    requestUrl,
-                    e.getStatusCode().value(),
-                    e.getResponseBodyAsString()
-                );
-                throw new SystemException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                throw new SystemException(ErrorMessages.INTERNAL_SERVER_ERROR,
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e);
             }
         }
     }
 
     public AuditionPost getPostByIdIncludingComments(final String id) {
-        String requestUrl = String.format(
+        final String requestUrl = String.format(
             externalApiConfiguration.getBaseUrl().concat(externalApiConfiguration.getGetPostCommentsPath()),
             id
         );
-        AuditionPost auditionPost = this.getPostById(id);
+        final AuditionPost auditionPost = this.getPostById(id);
         try {
-            List<AuditionPostComment> comments = Arrays.asList(
-                Objects.requireNonNull(restTemplate.getForEntity(requestUrl, AuditionPostComment[].class).getBody()));
-            auditionPost.setComments(comments);
+            final AuditionPostComment[] body = restTemplate.getForEntity(requestUrl,
+                AuditionPostComment[].class).getBody();
+            if (body != null) {
+                auditionPost.setComments(Arrays.asList(body));
+            }
             return auditionPost;
         } catch (final HttpClientErrorException e) {
-            LOG.error(
-                "Error occurred while executing getPostByIdIncludingComments - requestUrl[{}] statusCode[{}] responseBody[{}]",
-                requestUrl,
-                e.getStatusCode().value(),
-                e.getResponseBodyAsString()
-            );
-            throw new SystemException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            if (LOG.isErrorEnabled()) {
+                LOG.error(
+                    "Error occurred while executing getPostByIdIncludingComments - requestUrl[{}] statusCode[{}] responseBody[{}] -",
+                    requestUrl,
+                    e.getStatusCode().value(),
+                    e.getResponseBodyAsString(),
+                    e
+                );
+            }
+            throw new SystemException(ErrorMessages.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.value(), e);
         }
     }
 
     public List<AuditionPostComment> getCommentsByPost(final String id) {
-        String requestUrl = String.format(
+        final String requestUrl = String.format(
             externalApiConfiguration.getBaseUrl().concat(externalApiConfiguration.getGetCommentsByPost()),
             id
         );
         try {
-            return Arrays.asList(
-                Objects.requireNonNull(restTemplate.getForEntity(requestUrl, AuditionPostComment[].class).getBody()));
+            final AuditionPostComment[] body = restTemplate.getForEntity(requestUrl,
+                AuditionPostComment[].class).getBody();
+            if (body != null) {
+                return Arrays.asList(body);
+            } else {
+                return Collections.emptyList();
+            }
         } catch (final HttpClientErrorException e) {
+            if (LOG.isErrorEnabled()) {
+                LOG.error(
+                    "Error occurred while executing getCommentsByPost - requestUrl[{}] statusCode[{}] responseBody[{}] - ",
+                    requestUrl,
+                    e.getStatusCode().value(),
+                    e.getResponseBodyAsString(),
+                    e
+                );
+            }
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new SystemException(
                     String.format("Cannot find a Post with id - %s", id),
                     "Resource Not Found",
-                    HttpStatus.NOT_FOUND.value()
+                    HttpStatus.NOT_FOUND.value(),
+                    e
                 );
             } else {
-                LOG.error(
-                    "Error occurred while executing getCommentsByPost - requestUrl[{}] statusCode[{}] responseBody[{}]",
-                    requestUrl,
-                    e.getStatusCode().value(),
-                    e.getResponseBodyAsString()
-                );
-                throw new SystemException("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR.value());
+                throw new SystemException(ErrorMessages.INTERNAL_SERVER_ERROR,
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e);
             }
         }
     }
