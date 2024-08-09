@@ -4,9 +4,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.Collections;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 @JsonInclude(Include.NON_NULL)

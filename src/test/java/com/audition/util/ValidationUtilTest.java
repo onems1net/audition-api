@@ -13,9 +13,18 @@ class ValidationUtilTest {
     void givenInputWhenEmptyErrorIsThrown() {
         final String errorMessage = "ERROR_MESSAGE";
         final SystemException exception = assertThrows(SystemException.class,
-            () -> ValidationUtil.isNoneEmpty("", errorMessage));
-        assertEquals(exception.getDetail(), INVALID_PARAMETER_ERROR);
-        assertEquals(exception.getTitle(), errorMessage);
+            () -> ValidationUtil.isValidNumber("", errorMessage));
+        assertEquals(exception.getDetail(), errorMessage);
+        assertEquals(exception.getTitle(), INVALID_PARAMETER_ERROR);
+    }
+
+    @Test
+    void givenInputWhenIsNotNumberErrorIsThrown() {
+        final String errorMessage = "ERROR_MESSAGE";
+        final SystemException exception = assertThrows(SystemException.class,
+            () -> ValidationUtil.isValidNumber("878asdas", errorMessage));
+        assertEquals(exception.getDetail(), errorMessage);
+        assertEquals(exception.getTitle(), INVALID_PARAMETER_ERROR);
     }
 
 }

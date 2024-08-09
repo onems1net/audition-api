@@ -1,5 +1,7 @@
 package com.audition.web;
 
+import static com.audition.Constants.ErrorMessages.POST_ID_NOT_VALID_NUMBER_ERROR;
+
 import com.audition.model.AuditionPost;
 import com.audition.model.AuditionPostComment;
 import com.audition.service.AuditionService;
@@ -35,13 +37,13 @@ public class AuditionController {
         @PathVariable("id") final String postId,
         @RequestParam(required = false, defaultValue = "false") final Boolean includeComments
     ) {
-        ValidationUtil.isNoneEmpty(postId, "postId cannot be null or empty");
+        ValidationUtil.isValidNumber(postId, POST_ID_NOT_VALID_NUMBER_ERROR);
         return auditionService.getPostById(postId, includeComments);
     }
 
     @RequestMapping(value = "/posts/{id}/comments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<AuditionPostComment> getCommentsForPost(@PathVariable("id") final String postId) {
-        ValidationUtil.isNoneEmpty(postId, "postId cannot be null or empty");
+        ValidationUtil.isValidNumber(postId, POST_ID_NOT_VALID_NUMBER_ERROR);
         return auditionService.getCommentsForPost(postId);
     }
 
