@@ -59,8 +59,8 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
         final HttpStatusCode statusCode) {
         final ProblemDetail problemDetail = ProblemDetail.forStatus(statusCode);
         problemDetail.setDetail(getMessageFromException(exception));
-        if (exception instanceof SystemException) {
-            problemDetail.setTitle(((SystemException) exception).getTitle());
+        if (exception instanceof SystemException systemException) {
+            problemDetail.setTitle(systemException.getTitle());
         } else {
             problemDetail.setTitle(DEFAULT_TITLE);
         }
