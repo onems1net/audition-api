@@ -17,12 +17,26 @@ server:
   max-http-request-header-size: 16KB
 management:
   tracing:
+    enabled: true
     sampling:
       probability: 1.0
   endpoints:
     web:
       exposure:
-        include: '*' #TODO enable only info and health for security purposes. Consider that we may want to still access other actuator endpoints securely.
+        include: 'info,health'
+  endpoint:
+    health:
+      show-details: 'always'
+  security:
+    enabled: true
+    roles: ACTUATOR
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  traces:
+    exporter: otlp
+    sampler: always_on
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
