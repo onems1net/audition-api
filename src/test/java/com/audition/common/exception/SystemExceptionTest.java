@@ -11,7 +11,7 @@ class SystemExceptionTest {
 
     @Test
     void testDefaultConstructor() {
-        SystemException exception = new SystemException();
+        final SystemException exception = new SystemException();
         assertNull(exception.getMessage());
         assertNull(exception.getTitle());
         assertNull(exception.getStatusCode());
@@ -20,8 +20,8 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithMessage() {
-        String message = "System error";
-        SystemException exception = new SystemException(message);
+        final String message = "System error";
+        final SystemException exception = new SystemException(message);
         assertEquals(message, exception.getMessage());
         assertEquals(SystemException.DEFAULT_TITLE, exception.getTitle());
         assertNull(exception.getStatusCode());
@@ -30,9 +30,9 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithMessageAndErrorCode() {
-        String message = "System error";
-        Integer errorCode = 500;
-        SystemException exception = new SystemException(message, errorCode);
+        final String message = "System error";
+        final Integer errorCode = 500;
+        final SystemException exception = new SystemException(message, errorCode);
         assertEquals(message, exception.getMessage());
         assertEquals(SystemException.DEFAULT_TITLE, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());
@@ -41,9 +41,9 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithMessageAndThrowable() {
-        String message = "System error";
-        Throwable cause = new Throwable(CAUSE);
-        SystemException exception = new SystemException(message, cause);
+        final String message = "System error";
+        final Throwable cause = new Throwable(CAUSE);
+        final SystemException exception = new SystemException(message, cause);
         assertEquals(message, exception.getMessage());
         assertEquals(SystemException.DEFAULT_TITLE, exception.getTitle());
         assertNull(exception.getStatusCode());
@@ -53,9 +53,9 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithDetailTitleAndErrorCode() {
-        String title = "System Error Title";
-        Integer errorCode = 500;
-        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, errorCode);
+        final String title = "System Error Title";
+        final Integer errorCode = 500;
+        final SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, errorCode);
         assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(title, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());
@@ -64,9 +64,9 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithDetailTitleAndThrowable() {
-        String title = "System Error Title";
-        Throwable cause = new Throwable(CAUSE);
-        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, cause);
+        final String title = "System Error Title";
+        final Throwable cause = new Throwable(CAUSE);
+        final SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, cause);
         assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(title, exception.getTitle());
         assertEquals(500, exception.getStatusCode());
@@ -76,9 +76,9 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithDetailErrorCodeAndThrowable() {
-        Integer errorCode = 500;
-        Throwable cause = new Throwable(CAUSE);
-        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, errorCode, cause);
+        final Integer errorCode = 500;
+        final Throwable cause = new Throwable(CAUSE);
+        final SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, errorCode, cause);
         assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(SystemException.DEFAULT_TITLE, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());
@@ -88,10 +88,10 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithDetailTitleErrorCodeAndThrowable() {
-        String title = "System Error Title";
-        Integer errorCode = 500;
-        Throwable cause = new Throwable(CAUSE);
-        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, errorCode, cause);
+        final String title = "System Error Title";
+        final Integer errorCode = 500;
+        final Throwable cause = new Throwable(CAUSE);
+        final SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, errorCode, cause);
         assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(title, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());

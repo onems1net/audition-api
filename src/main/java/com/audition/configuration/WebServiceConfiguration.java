@@ -30,6 +30,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Configuration class for web services. Implements {@link WebMvcConfigurer} to customize the Spring MVC configuration.
  */
 @Configuration
+@SuppressWarnings("squid:S3457")
 public class WebServiceConfiguration implements WebMvcConfigurer {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebServiceConfiguration.class);
@@ -58,7 +59,7 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
      * @param registry the interceptor registry
      */
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(final InterceptorRegistry registry) {
         registry.addInterceptor(responseHeaderInjector);
     }
 
@@ -69,7 +70,7 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setDateFormat(new SimpleDateFormat(YEAR_MONTH_DAY_PATTERN, Locale.forLanguageTag("en-AU")));
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
@@ -86,7 +87,7 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
      * @return the configured RestTemplate
      */
     @Bean
-    public RestTemplate restTemplate(ObjectMapper objectMapper) {
+    public RestTemplate restTemplate(final ObjectMapper objectMapper) {
         final RestTemplate restTemplate = new RestTemplate(
             new BufferingClientHttpRequestFactory(createClientFactory()));
 
@@ -109,11 +110,9 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
             // Log request details
             logger.info(LOG, "Request URI: " + request.getURI());
             logger.info(LOG, "Request Method: " + request.getMethod());
-            logger.info(LOG, "Request Headers: " + request.getHeaders());
-            logger.info(LOG, "Request Body: " + new String(body, StandardCharsets.UTF_8));
 
             // Execute the request
-            var response = execution.execute(request, body);
+            final var response = execution.execute(request, body);
 
             // Convert InputStream to String and ensure it is closed
             String responseBody;
@@ -124,7 +123,6 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
 
             // Log response details
             logger.info(LOG, "Response Status Code: " + response.getStatusCode());
-            logger.info(LOG, "Response Headers: " + response.getHeaders());
             logger.info(LOG, "Response Body: " + responseBody);
 
             return response;

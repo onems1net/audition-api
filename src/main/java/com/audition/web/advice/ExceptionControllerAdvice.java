@@ -35,6 +35,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
     @Autowired
     public ExceptionControllerAdvice(final AuditionLogger logger) {
+        super();
         this.logger = logger;
     }
 
@@ -58,14 +59,17 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SystemException.class)
     ProblemDetail handleSystemException(final SystemException e) {
+        // Log the exception
+        logger.logErrorWithException(LOG, "SystemException occurred", e);
+
         final HttpStatusCode status = getHttpStatusCodeFromSystemException(e);
         return createProblemDetail(e, status);
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
-        @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
-        ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.BAD_REQUEST);
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(final @NonNull MethodArgumentNotValidException ex,
+        final @NonNull HttpHeaders headers, final @NonNull HttpStatusCode status, final @NonNull WebRequest request) {
+        final ProblemDetail problemDetail = createProblemDetail(ex, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(problemDetail, headers, status);
     }
 

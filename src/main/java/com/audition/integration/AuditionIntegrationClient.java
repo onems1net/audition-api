@@ -34,7 +34,7 @@ public class AuditionIntegrationClient {
      */
     public List<AuditionPost> getPosts() {
         return handleExceptions(() -> {
-            AuditionPost[] posts = restTemplate.getForObject(baseUrl + "posts", AuditionPost[].class);
+            final AuditionPost[] posts = restTemplate.getForObject(baseUrl + "posts", AuditionPost[].class);
             return posts != null ? Arrays.asList(posts) : new ArrayList<>();
         });
     }
@@ -57,9 +57,10 @@ public class AuditionIntegrationClient {
      */
     public AuditionPost getPostWithCommentsById(final String postId) {
         return handleExceptions(() -> {
-            AuditionPost post = restTemplate.getForObject(baseUrl + "posts/" + postId, AuditionPost.class);
+            final AuditionPost post = restTemplate.getForObject(baseUrl + "posts/" + postId, AuditionPost.class);
             if (post != null) {
-                AuditionPostComment[] comments = restTemplate.getForObject(baseUrl + "posts/" + postId + "/comments",
+                final AuditionPostComment[] comments = restTemplate.getForObject(
+                    baseUrl + "posts/" + postId + "/comments",
                     AuditionPostComment[].class);
                 post.setComments(comments != null ? Arrays.asList(comments) : new ArrayList<>());
             }
@@ -75,7 +76,7 @@ public class AuditionIntegrationClient {
      */
     public List<AuditionPostComment> getCommentsByPostId(final String postId) {
         return handleExceptions(() -> {
-            AuditionPostComment[] comments = restTemplate.getForObject(baseUrl + "comments?postId=" + postId,
+            final AuditionPostComment[] comments = restTemplate.getForObject(baseUrl + "comments?postId=" + postId,
                 AuditionPostComment[].class);
             return comments != null ? Arrays.asList(comments) : new ArrayList<>();
         });
@@ -89,17 +90,16 @@ public class AuditionIntegrationClient {
      * @return the result of the RestTemplate call
      * @throws SystemException if an error occurs during the RestTemplate call
      */
-    private <T> T handleExceptions(RestTemplateCall<T> call) {
+    private <T> T handleExceptions(final RestTemplateCall<T> call) {
         try {
             return call.execute();
-        } catch (HttpClientErrorException e) {
-            throw new SystemException("HTTP error", e.getMessage(), e.getStatusCode().value());
-        } catch (ResourceAccessException e) {
-            throw new SystemException("Resource access error", e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
-        } catch (RestClientException e) {
-            throw new SystemException("Client error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
-        } catch (Exception e) {
-            throw new SystemException("Unexpected error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        } catch (HttpClientErrorException exc) {
+            throw new SystemException("HTTP error", exc.getMessage(), exc.getStatusCode().value(), exc);
+        } catch (ResourceAccessException exc) {
+            throw new SystemException("Resource access error", exc.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value(),
+                exc);
+        } catch (RestClientException exc) {
+            throw new SystemException("Client error", exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), exc);
         }
     }
 
@@ -115,8 +115,7 @@ public class AuditionIntegrationClient {
          * Executes the RestTemplate call.
          *
          * @return the result of the RestTemplate call
-         * @throws Exception if an error occurs during the RestTemplate call
          */
-        T execute() throws Exception;
+        T execute();
     }
 }

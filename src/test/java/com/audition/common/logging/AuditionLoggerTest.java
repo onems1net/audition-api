@@ -2,6 +2,7 @@ package com.audition.common.logging;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.eq;
@@ -11,11 +12,13 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.springframework.http.ProblemDetail;
 
+@SuppressWarnings("PMD.LoggerIsNotStaticFinal")
 class AuditionLoggerTest {
 
     @Mock
     private transient Logger logger;
 
+    @InjectMocks
     private transient AuditionLogger auditionLogger;
 
     @BeforeEach
@@ -26,7 +29,7 @@ class AuditionLoggerTest {
 
     @Test
     void testInfo() {
-        String message = "Info message";
+        final String message = "Info message";
         when(logger.isInfoEnabled()).thenReturn(true);
 
         auditionLogger.info(logger, message);
@@ -36,8 +39,8 @@ class AuditionLoggerTest {
 
     @Test
     void testInfoWithObject() {
-        String message = "Info message with object";
-        Object object = new Object();
+        final String message = "Info message with object";
+        final Object object = new Object();
         when(logger.isInfoEnabled()).thenReturn(true);
 
         auditionLogger.info(logger, message, object);
@@ -47,7 +50,7 @@ class AuditionLoggerTest {
 
     @Test
     void testDebug() {
-        String message = "Debug message";
+        final String message = "Debug message";
         when(logger.isDebugEnabled()).thenReturn(true);
 
         auditionLogger.debug(logger, message);
@@ -57,7 +60,7 @@ class AuditionLoggerTest {
 
     @Test
     void testWarn() {
-        String message = "Warn message";
+        final String message = "Warn message";
         when(logger.isWarnEnabled()).thenReturn(true);
 
         auditionLogger.warn(logger, message);
@@ -67,7 +70,7 @@ class AuditionLoggerTest {
 
     @Test
     void testError() {
-        String message = "Error message";
+        final String message = "Error message";
         when(logger.isErrorEnabled()).thenReturn(true);
 
         auditionLogger.error(logger, message);
@@ -77,8 +80,8 @@ class AuditionLoggerTest {
 
     @Test
     void testLogErrorWithException() {
-        String message = "Error message with exception";
-        Exception exception = new Exception("Exception message");
+        final String message = "Error message with exception";
+        final Exception exception = new Exception("Exception message");
         when(logger.isErrorEnabled()).thenReturn(true);
 
         auditionLogger.logErrorWithException(logger, message, exception);
@@ -88,8 +91,8 @@ class AuditionLoggerTest {
 
     @Test
     void testLogStandardProblemDetail() {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(500);
-        Exception exception = new Exception("Exception message");
+        final ProblemDetail problemDetail = ProblemDetail.forStatus(500);
+        final Exception exception = new Exception("Exception message");
         when(logger.isErrorEnabled()).thenReturn(true);
 
         auditionLogger.logStandardProblemDetail(logger, problemDetail, exception);
@@ -99,8 +102,8 @@ class AuditionLoggerTest {
 
     @Test
     void testLogHttpStatusCodeError() {
-        String message = "HTTP status code error";
-        Integer errorCode = 400;
+        final String message = "HTTP status code error";
+        final Integer errorCode = 400;
         when(logger.isErrorEnabled()).thenReturn(true);
 
         auditionLogger.logHttpStatusCodeError(logger, message, errorCode);

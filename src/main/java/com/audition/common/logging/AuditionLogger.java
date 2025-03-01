@@ -5,6 +5,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Component;
 
 @Component
+@SuppressWarnings("PMD.TooManyMethods")
 public class AuditionLogger {
 
     public void info(final Logger logger, final String message) {
@@ -16,6 +17,12 @@ public class AuditionLogger {
     public void info(final Logger logger, final String message, final Object object) {
         if (logger.isInfoEnabled()) {
             logger.info(message, object);
+        }
+    }
+
+    public void info(final Logger logger, final String message, final Object... objects) {
+        if (logger.isInfoEnabled()) {
+            logger.info(message, objects);
         }
     }
 

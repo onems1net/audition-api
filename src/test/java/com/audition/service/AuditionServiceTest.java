@@ -28,42 +28,42 @@ class AuditionServiceTest {
 
     @Test
     void testGetPosts() {
-        AuditionPost post = new AuditionPost();
-        List<AuditionPost> expectedPosts = Collections.singletonList(post);
+        final AuditionPost post = new AuditionPost();
+        final List<AuditionPost> expectedPosts = Collections.singletonList(post);
         when(auditionIntegrationClient.getPosts()).thenReturn(expectedPosts);
 
-        List<AuditionPost> actualPosts = auditionService.getPosts();
+        final List<AuditionPost> actualPosts = auditionService.getPosts();
         assertEquals(expectedPosts, actualPosts);
     }
 
     @Test
     void testGetPostById() {
-        String postId = "1";
-        AuditionPost expectedPost = new AuditionPost();
+        final String postId = "1";
+        final AuditionPost expectedPost = new AuditionPost();
         when(auditionIntegrationClient.getPostById(postId)).thenReturn(expectedPost);
 
-        AuditionPost actualPost = auditionService.getPostById(postId);
+        final AuditionPost actualPost = auditionService.getPostById(postId);
         assertEquals(expectedPost, actualPost);
     }
 
     @Test
     void testGetPostWithCommentsById() {
-        String postId = "1";
-        AuditionPost expectedPost = new AuditionPost();
+        final String postId = "1";
+        final AuditionPost expectedPost = new AuditionPost();
         when(auditionIntegrationClient.getPostWithCommentsById(postId)).thenReturn(expectedPost);
 
-        AuditionPost actualPost = auditionService.getPostWithCommentsById(postId);
+        final AuditionPost actualPost = auditionService.getPostWithCommentsById(postId);
         assertEquals(expectedPost, actualPost);
     }
 
     @Test
     void testGetCommentsByPostId() {
-        String postId = "1";
-        AuditionPostComment comment = new AuditionPostComment();
-        List<AuditionPostComment> expectedComments = Collections.singletonList(comment);
+        final String postId = "1";
+        final AuditionPostComment comment = new AuditionPostComment();
+        final List<AuditionPostComment> expectedComments = Collections.singletonList(comment);
         when(auditionIntegrationClient.getCommentsByPostId(postId)).thenReturn(expectedComments);
 
-        List<AuditionPostComment> actualComments = auditionService.getCommentsByPostId(postId);
+        final List<AuditionPostComment> actualComments = auditionService.getCommentsByPostId(postId);
         assertEquals(expectedComments, actualComments);
     }
 }

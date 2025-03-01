@@ -20,7 +20,7 @@ public class AuditionPost {
         return Collections.unmodifiableList(comments);
     }
 
-    public void setComments(List<AuditionPostComment> comments) {
+    public void setComments(final List<AuditionPostComment> comments) {
         this.comments = new ArrayList<>(comments);
     }
 }

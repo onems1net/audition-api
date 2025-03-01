@@ -18,46 +18,51 @@ class AuditionPostTest {
 
     @Test
     void testGettersAndSetters() {
-        auditionPost.setUserId(1);
-        auditionPost.setId(101);
-        auditionPost.setTitle("Test Title");
-        auditionPost.setBody("Test Body");
+        final int userId = 1;
+        final int id = 101;
+        final String title = "Test Title";
+        final String body = "Test Body";
 
-        assertEquals(1, auditionPost.getUserId());
-        assertEquals(101, auditionPost.getId());
-        assertEquals("Test Title", auditionPost.getTitle());
-        assertEquals("Test Body", auditionPost.getBody());
+        auditionPost.setUserId(userId);
+        auditionPost.setId(id);
+        auditionPost.setTitle(title);
+        auditionPost.setBody(body);
+
+        assertEquals(userId, auditionPost.getUserId());
+        assertEquals(id, auditionPost.getId());
+        assertEquals(title, auditionPost.getTitle());
+        assertEquals(body, auditionPost.getBody());
     }
 
     @Test
     void testGetComments() {
-        List<AuditionPostComment> comments = new ArrayList<>();
+        final List<AuditionPostComment> comments = new ArrayList<>();
         comments.add(new AuditionPostComment());
         auditionPost.setComments(comments);
 
-        List<AuditionPostComment> retrievedComments = auditionPost.getComments();
+        final List<AuditionPostComment> retrievedComments = auditionPost.getComments();
         assertEquals(1, retrievedComments.size());
         assertEquals(comments, retrievedComments);
     }
 
     @Test
     void testSetComments() {
-        List<AuditionPostComment> comments = new ArrayList<>();
+        final List<AuditionPostComment> comments = new ArrayList<>();
         comments.add(new AuditionPostComment());
         auditionPost.setComments(comments);
 
-        List<AuditionPostComment> retrievedComments = auditionPost.getComments();
+        final List<AuditionPostComment> retrievedComments = auditionPost.getComments();
         assertEquals(1, retrievedComments.size());
         assertEquals(comments, retrievedComments);
     }
 
     @Test
     void testGetCommentsReturnsUnmodifiableList() {
-        List<AuditionPostComment> comments = new ArrayList<>();
+        final List<AuditionPostComment> comments = new ArrayList<>();
         comments.add(new AuditionPostComment());
         auditionPost.setComments(comments);
 
-        List<AuditionPostComment> retrievedComments = auditionPost.getComments();
+        final List<AuditionPostComment> retrievedComments = auditionPost.getComments();
         assertThrows(UnsupportedOperationException.class, () -> {
             retrievedComments.add(new AuditionPostComment());
         });

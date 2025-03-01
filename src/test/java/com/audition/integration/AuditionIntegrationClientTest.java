@@ -23,6 +23,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @SpringJUnitConfig
+@SuppressWarnings("PMD.TooManyMethods")
 class AuditionIntegrationClientTest {
 
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com/";
@@ -46,88 +47,83 @@ class AuditionIntegrationClientTest {
 
     @Test
     void testGetPosts() {
-        AuditionPost[] posts = new AuditionPost[]{new AuditionPost()};
-        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class))
-            .thenReturn(posts);
+        final AuditionPost[] posts = {new AuditionPost()};
+        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class)).thenReturn(posts);
 
-        List<AuditionPost> actualPosts = auditionIntegrationClient.getPosts();
+        final List<AuditionPost> actualPosts = auditionIntegrationClient.getPosts();
         assertEquals(Arrays.asList(posts), actualPosts);
     }
 
     @Test
     void testGetPostById() {
-        String postId = "1";
-        AuditionPost post = new AuditionPost();
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenReturn(post);
+        final String postId = "1";
+        final AuditionPost post = new AuditionPost();
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenReturn(post);
 
-        AuditionPost actualPost = auditionIntegrationClient.getPostById(postId);
+        final AuditionPost actualPost = auditionIntegrationClient.getPostById(postId);
         assertEquals(post, actualPost);
     }
 
     @Test
     void testGetPostWithCommentsById() {
-        String postId = "1";
-        AuditionPost post = new AuditionPost();
-        AuditionPostComment[] comments = new AuditionPostComment[]{new AuditionPostComment()};
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenReturn(post);
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId + "/comments", AuditionPostComment[].class))
-            .thenReturn(comments);
+        final String postId = "1";
+        final AuditionPost post = new AuditionPost();
+        final AuditionPostComment[] comments = {new AuditionPostComment()};
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenReturn(post);
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId + "/comments",
+            AuditionPostComment[].class)).thenReturn(comments);
 
-        AuditionPost actualPost = auditionIntegrationClient.getPostWithCommentsById(postId);
+        final AuditionPost actualPost = auditionIntegrationClient.getPostWithCommentsById(postId);
         assertEquals(post, actualPost);
         assertEquals(Arrays.asList(comments), actualPost.getComments());
     }
 
     @Test
     void testGetCommentsByPostId() {
-        String postId = "1";
-        AuditionPostComment[] comments = new AuditionPostComment[]{new AuditionPostComment()};
-        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class))
-            .thenReturn(comments);
+        final String postId = "1";
+        final AuditionPostComment[] comments = {new AuditionPostComment()};
+        when(
+            restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class)).thenReturn(
+            comments);
 
-        List<AuditionPostComment> actualComments = auditionIntegrationClient.getCommentsByPostId(postId);
+        final List<AuditionPostComment> actualComments = auditionIntegrationClient.getCommentsByPostId(postId);
         assertEquals(Arrays.asList(comments), actualComments);
     }
 
     @Test
     void testGetPostsThrowsHttpClientErrorException() {
-        HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
+        final HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
             new HttpHeaders(), new byte[0], null);
-        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class))
-            .thenThrow(exception);
+        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class)).thenThrow(exception);
 
-        SystemException thrown = assertThrows(SystemException.class, () -> auditionIntegrationClient.getPosts());
+        final SystemException thrown = assertThrows(SystemException.class, () -> auditionIntegrationClient.getPosts());
         assertEquals(HTTP_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
     }
 
     @Test
     void testGetPostsThrowsResourceAccessException() {
-        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class))
-            .thenThrow(ResourceAccessException.class);
+        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class)).thenThrow(
+            ResourceAccessException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getPosts());
     }
 
     @Test
     void testGetPostsThrowsRestClientException() {
-        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class))
-            .thenThrow(RestClientException.class);
+        when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class)).thenThrow(RestClientException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getPosts());
     }
 
     @Test
     void testGetPostByIdThrowsHttpClientErrorException() {
-        String postId = "1";
-        HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
+        final String postId = "1";
+        final HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
             new HttpHeaders(), new byte[0], null);
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenThrow(exception);
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenThrow(exception);
 
-        SystemException thrown = assertThrows(SystemException.class,
+        final SystemException thrown = assertThrows(SystemException.class,
             () -> auditionIntegrationClient.getPostById(postId));
         assertEquals(HTTP_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
@@ -135,31 +131,30 @@ class AuditionIntegrationClientTest {
 
     @Test
     void testGetPostByIdThrowsResourceAccessException() {
-        String postId = "1";
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenThrow(ResourceAccessException.class);
+        final String postId = "1";
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenThrow(
+            ResourceAccessException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getPostById(postId));
     }
 
     @Test
     void testGetPostByIdThrowsRestClientException() {
-        String postId = "1";
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenThrow(RestClientException.class);
+        final String postId = "1";
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenThrow(
+            RestClientException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getPostById(postId));
     }
 
     @Test
     void testGetPostWithCommentsByIdThrowsHttpClientErrorException() {
-        String postId = "1";
-        HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
+        final String postId = "1";
+        final HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
             new HttpHeaders(), new byte[0], null);
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenThrow(exception);
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenThrow(exception);
 
-        SystemException thrown = assertThrows(SystemException.class,
+        final SystemException thrown = assertThrows(SystemException.class,
             () -> auditionIntegrationClient.getPostWithCommentsById(postId));
         assertEquals(HTTP_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
@@ -167,31 +162,31 @@ class AuditionIntegrationClientTest {
 
     @Test
     void testGetPostWithCommentsByIdThrowsResourceAccessException() {
-        String postId = "1";
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenThrow(ResourceAccessException.class);
+        final String postId = "1";
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenThrow(
+            ResourceAccessException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getPostWithCommentsById(postId));
     }
 
     @Test
     void testGetPostWithCommentsByIdThrowsRestClientException() {
-        String postId = "1";
-        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class))
-            .thenThrow(RestClientException.class);
+        final String postId = "1";
+        when(restTemplate.getForObject(BASE_URL + POSTS_SLASH + postId, AuditionPost.class)).thenThrow(
+            RestClientException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getPostWithCommentsById(postId));
     }
 
     @Test
     void testGetCommentsByPostIdThrowsHttpClientErrorException() {
-        String postId = "1";
-        HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
+        final String postId = "1";
+        final HttpClientErrorException exception = HttpClientErrorException.create(HttpStatus.BAD_REQUEST, BAD_REQUEST,
             new HttpHeaders(), new byte[0], null);
-        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class))
-            .thenThrow(exception);
+        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class)).thenThrow(
+            exception);
 
-        SystemException thrown = assertThrows(SystemException.class,
+        final SystemException thrown = assertThrows(SystemException.class,
             () -> auditionIntegrationClient.getCommentsByPostId(postId));
         assertEquals(HTTP_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
@@ -199,18 +194,18 @@ class AuditionIntegrationClientTest {
 
     @Test
     void testGetCommentsByPostIdThrowsResourceAccessException() {
-        String postId = "1";
-        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class))
-            .thenThrow(ResourceAccessException.class);
+        final String postId = "1";
+        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class)).thenThrow(
+            ResourceAccessException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getCommentsByPostId(postId));
     }
 
     @Test
     void testGetCommentsByPostIdThrowsRestClientException() {
-        String postId = "1";
-        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class))
-            .thenThrow(RestClientException.class);
+        final String postId = "1";
+        when(restTemplate.getForObject(BASE_URL + COMMENTS_BY_POST_ID + postId, AuditionPostComment[].class)).thenThrow(
+            RestClientException.class);
 
         assertThrows(SystemException.class, () -> auditionIntegrationClient.getCommentsByPostId(postId));
     }

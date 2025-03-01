@@ -36,8 +36,8 @@ class ExceptionControllerAdviceTest {
 
     @Test
     void testHandleHttpClientException() {
-        HttpClientErrorException exception = new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Bad Request");
-        ProblemDetail problemDetail = exceptionControllerAdvice.handleHttpClientException(exception);
+        final HttpClientErrorException exception = new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Bad Request");
+        final ProblemDetail problemDetail = exceptionControllerAdvice.handleHttpClientException(exception);
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), problemDetail.getStatus());
         assertEquals("400 Bad Request", problemDetail.getDetail());
@@ -46,8 +46,8 @@ class ExceptionControllerAdviceTest {
 
     @Test
     void testHandleMainException() {
-        Exception exception = new Exception("Unexpected error");
-        ProblemDetail problemDetail = exceptionControllerAdvice.handleMainException(exception);
+        final Exception exception = new Exception("Unexpected error");
+        final ProblemDetail problemDetail = exceptionControllerAdvice.handleMainException(exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), problemDetail.getStatus());
         assertEquals("Unexpected error", problemDetail.getDetail());
@@ -57,8 +57,8 @@ class ExceptionControllerAdviceTest {
 
     @Test
     void testHandleSystemException() {
-        SystemException exception = new SystemException("System error", "System Error Title", 500);
-        ProblemDetail problemDetail = exceptionControllerAdvice.handleSystemException(exception);
+        final SystemException exception = new SystemException("System error", "System Error Title", 500);
+        final ProblemDetail problemDetail = exceptionControllerAdvice.handleSystemException(exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), problemDetail.getStatus());
         assertEquals("System error", problemDetail.getDetail());
@@ -67,16 +67,16 @@ class ExceptionControllerAdviceTest {
 
     @Test
     void testHandleMethodArgumentNotValid() {
-        MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
-        HttpHeaders headers = new HttpHeaders();
-        HttpStatusCode status = HttpStatus.BAD_REQUEST;
-        WebRequest request = mock(WebRequest.class);
+        final MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
+        final HttpHeaders headers = new HttpHeaders();
+        final HttpStatusCode status = HttpStatus.BAD_REQUEST;
+        final WebRequest request = mock(WebRequest.class);
 
-        ResponseEntity<Object> responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValid(exception,
+        final ResponseEntity<Object> responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValid(exception,
             headers, status, request);
 
         assert responseEntity != null;
-        ProblemDetail problemDetail = (ProblemDetail) responseEntity.getBody();
+        final ProblemDetail problemDetail = (ProblemDetail) responseEntity.getBody();
         assert problemDetail != null;
         assertEquals(HttpStatus.BAD_REQUEST.value(), problemDetail.getStatus());
         assertEquals(ExceptionControllerAdvice.DEFAULT_TITLE, problemDetail.getTitle());

@@ -15,8 +15,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 targetCompatibility = '17'
 
-// TODO allow for code-analysis.gradle to be applied for code analysis.
-// apply from: 'config/code-analysis.gradle'
+apply from: 'config/code-analysis.gradle'
 
 configurations {
     compileOnly {
@@ -81,14 +80,6 @@ dependencies {
 
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
-    testImplementation 'org.eclipse.jetty:jetty-server:9.4.44.v20210927'
-    testImplementation 'org.eclipse.jetty:jetty-util:9.4.44.v20210927'
-    testImplementation 'org.eclipse.jetty:jetty-http:9.4.44.v20210927'
-    testImplementation 'org.eclipse.jetty:jetty-io:9.4.44.v20210927'
-    testImplementation 'org.eclipse.jetty:jetty-client:9.4.44.v20210927'
-    testImplementation 'org.eclipse.jetty:jetty-servlet:9.4.44.v20210927' // Add this line
-    testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
 
 dependencyManagement {
