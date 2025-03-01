@@ -1,0 +1,31 @@
+@startuml
+actor User
+
+User -> AuditionController: GET /posts
+AuditionController -> AuditionService: getPosts()
+AuditionService -> AuditionIntegrationClient: getPosts()
+AuditionIntegrationClient --> AuditionService: List<AuditionPost>
+AuditionService --> AuditionController: List<AuditionPost>
+AuditionController --> User: List<AuditionPost>
+
+User -> AuditionController: GET /posts/{id}
+AuditionController -> AuditionService: getPostById(postId)
+AuditionService -> AuditionIntegrationClient: getPostById(postId)
+AuditionIntegrationClient --> AuditionService: AuditionPost
+AuditionService --> AuditionController: AuditionPost
+AuditionController --> User: AuditionPost
+
+User -> AuditionController: GET /posts/{id}/comments
+AuditionController -> AuditionService: getPostWithCommentsById(postId)
+AuditionService -> AuditionIntegrationClient: getPostWithCommentsById(postId)
+AuditionIntegrationClient --> AuditionService: AuditionPost
+AuditionService --> AuditionController: AuditionPost
+AuditionController --> User: AuditionPost
+
+User -> AuditionController: GET /comments/{postId}
+AuditionController -> AuditionService: getCommentsByPostId(postId)
+AuditionService -> AuditionIntegrationClient: getCommentsByPostId(postId)
+AuditionIntegrationClient --> AuditionService: List<AuditionPostComment>
+AuditionService --> AuditionController: List<AuditionPostComment>
+AuditionController --> User: List<AuditionPostComment>
+@enduml

@@ -7,78 +7,71 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 public class AuditionIntegrationClient {
 
-
     @Autowired
-    private RestTemplate restTemplate;
+    private transient RestTemplate restTemplate;
+
+    @Value("${audition.integration.base-url}")
+    private transient String baseUrl;
 
     public List<AuditionPost> getPosts() {
-        // TODO make RestTemplate call to get Posts from https://jsonplaceholder.typicode.com/posts
-
-        try {
-            AuditionPost[] posts = restTemplate.getForObject("https://jsonplaceholder.typicode.com/posts",
-                AuditionPost[].class);
+        return handleExceptions(() -> {
+            AuditionPost[] posts = restTemplate.getForObject(baseUrl + "posts", AuditionPost[].class);
             return posts != null ? Arrays.asList(posts) : new ArrayList<>();
-        } catch (HttpClientErrorException e) {
-            throw new SystemException("Error fetching posts", e.getMessage(), e.getStatusCode().value());
-        }
+        });
     }
 
     public AuditionPost getPostById(final String id) {
-        // TODO get post by post ID call from https://jsonplaceholder.typicode.com/posts/
-        try {
-            return restTemplate.getForObject("https://jsonplaceholder.typicode.com/posts/" + id, AuditionPost.class);
-        } catch (final HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new SystemException("Cannot find a Post with id " + id, "Resource Not Found", 404);
-            } else {
-                throw new SystemException("Error fetching post", e.getMessage(), e.getStatusCode().value());
-            }
-        }
+        return handleExceptions(() -> restTemplate.getForObject(baseUrl + "posts/" + id, AuditionPost.class));
     }
 
-    // TODO Write a method GET comments for a post from https://jsonplaceholder.typicode.com/posts/{postId}/comments - the comments must be returned as part of the post.
     public AuditionPost getPostWithCommentsById(final String postId) {
-        try {
-            AuditionPost post = restTemplate.getForObject("https://jsonplaceholder.typicode.com/posts/" + postId,
-                AuditionPost.class);
+        return handleExceptions(() -> {
+            AuditionPost post = restTemplate.getForObject(baseUrl + "posts/" + postId, AuditionPost.class);
             if (post != null) {
-                AuditionPostComment[] comments = restTemplate.getForObject(
-                    "https://jsonplaceholder.typicode.com/posts/" + postId + "/comments", AuditionPostComment[].class);
-                post.setComments(comments != null ? Arrays.asList(comments)
-                    : new ArrayList<>());
+                AuditionPostComment[] comments = restTemplate.getForObject(baseUrl + "posts/" + postId + "/comments",
+                    AuditionPostComment[].class);
+                post.setComments(comments != null ? Arrays.asList(comments) : new ArrayList<>());
             }
             return post;
-        } catch (final HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new SystemException("Cannot find a Post with id " + postId, "Resource Not Found", 404);
-            } else {
-                throw new SystemException("Error fetching post or comments", e.getMessage(), e.getStatusCode().value());
-            }
-        }
+        });
     }
 
-    // TODO write a method. GET comments for a particular Post from https://jsonplaceholder.typicode.com/comments?postId={postId}.
-    // The comments are a separate list that needs to be returned to the API consumers. Hint: this is not part of the AuditionPost pojo.
     public List<AuditionPostComment> getCommentsByPostId(final String postId) {
-        try {
-            AuditionPostComment[] comments = restTemplate.getForObject(
-                "https://jsonplaceholder.typicode.com/comments?postId=" + postId, AuditionPostComment[].class);
+        return handleExceptions(() -> {
+            AuditionPostComment[] comments = restTemplate.getForObject(baseUrl + "comments?postId=" + postId,
+                AuditionPostComment[].class);
             return comments != null ? Arrays.asList(comments) : new ArrayList<>();
-        } catch (final HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new SystemException("Cannot find comments for Post with id " + postId, "Resource Not Found", 404);
-            } else {
-                throw new SystemException("Error fetching comments", e.getMessage(), e.getStatusCode().value());
-            }
+        });
+    }
+
+    private <T> T handleExceptions(RestTemplateCall<T> call) {
+        try {
+            return call.execute();
+        } catch (HttpClientErrorException e) {
+            throw new SystemException("HTTP error", e.getMessage(), e.getStatusCode().value());
+        } catch (ResourceAccessException e) {
+            throw new SystemException("Resource access error", e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
+        } catch (RestClientException e) {
+            throw new SystemException("Client error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        } catch (Exception e) {
+            throw new SystemException("Unexpected error", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
     }
 
+    @FunctionalInterface
+    private interface RestTemplateCall<T> {
+
+        T execute() throws Exception;
+    }
 }

@@ -10,3 +10,7 @@ application:
     write-timeout: 5000
     connect-timeout: 5000
     response-timeout: 5000
+
+audition:
+  integration:
+    base-url: https://jsonplaceholder.typicode.com/

@@ -34,9 +34,9 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
 
     private static final String YEAR_MONTH_DAY_PATTERN = "yyyy-MM-dd";
 
-    private final ResponseHeaderInjector responseHeaderInjector;
+    private final transient ResponseHeaderInjector responseHeaderInjector;
 
-    private final AuditionLogger logger;
+    private final transient AuditionLogger logger;
 
     @Autowired
     public WebServiceConfiguration(final ResponseHeaderInjector responseHeaderInjector, final AuditionLogger logger) {
@@ -49,12 +49,6 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(responseHeaderInjector);
     }
 
-    // TODO configure Jackson Object mapper that
-    //  1. allows for date format as yyyy-MM-dd
-    //  2. Does not fail on unknown properties
-    //  3. maps to camelCase
-    //  4. Does not include null values or empty values
-    //  5. does not write datas as timestamps.
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -71,14 +65,18 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
     public RestTemplate restTemplate(ObjectMapper objectMapper) {
         final RestTemplate restTemplate = new RestTemplate(
             new BufferingClientHttpRequestFactory(createClientFactory()));
-        // TODO use object mapper
-        // TODO create a logging interceptor that logs request/response for rest template calls.
 
         // Use object mapper
         restTemplate.getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(objectMapper));
 
-        // Create a logging interceptor
-        ClientHttpRequestInterceptor loggingInterceptor = (request, body, execution) -> {
+        // Add the logging interceptor to the restTemplate
+        restTemplate.getInterceptors().add(createLoggingInterceptor());
+
+        return restTemplate;
+    }
+
+    private ClientHttpRequestInterceptor createLoggingInterceptor() {
+        return (request, body, execution) -> {
             // Log request details
             logger.info(LOG, "Request URI: " + request.getURI());
             logger.info(LOG, "Request Method: " + request.getMethod());
@@ -102,10 +100,6 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
 
             return response;
         };
-
-        restTemplate.getInterceptors().add(loggingInterceptor);
-
-        return restTemplate;
     }
 
     private SimpleClientHttpRequestFactory createClientFactory() {

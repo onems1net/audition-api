@@ -1,8 +1,5 @@
 package com.audition.web.advice;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
-
 import com.audition.common.exception.SystemException;
 import com.audition.common.logging.AuditionLogger;
 import io.micrometer.common.util.StringUtils;
@@ -11,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     private static final String ERROR_MESSAGE = " Error Code from Exception could not be mapped to a valid HttpStatus Code - ";
     private static final String DEFAULT_MESSAGE = "API Error occurred. Please contact support or administrator.";
 
-    private final AuditionLogger logger;
+    private final transient AuditionLogger logger;
 
     @Autowired
     public ExceptionControllerAdvice(final AuditionLogger logger) {
@@ -47,10 +46,20 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     ProblemDetail handleMainException(final Exception e) {
-        // TODO Add handling for Exception
-        final HttpStatusCode status = getHttpStatusCodeFromException(e);
-        return createProblemDetail(e, status);
+        // Log the exception
+        logger.logErrorWithException(LOG, "An unexpected error occurred", e);
 
+        // Get the HTTP status code from the exception
+        final HttpStatusCode status = getHttpStatusCodeFromException(e);
+
+        // Create and return the ProblemDetail
+        return createProblemDetail(e, status);
+    }
+
+    @ExceptionHandler(SystemException.class)
+    ProblemDetail handleSystemException(final SystemException e) {
+        final HttpStatusCode status = getHttpStatusCodeFromSystemException(e);
+        return createProblemDetail(e, status);
     }
 
     @Override

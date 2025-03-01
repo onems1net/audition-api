@@ -45,6 +45,21 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-config"
     implementation "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j"
 
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+    // Logging
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "ch.qos.logback:logback-core:${logbackVersion}"
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+
+    // Spring Boot Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Development Only
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+
     // Micrometer
 //    implementation "io.micrometer:micrometer-tracing"
 //    implementation "io.micrometer:micrometer-registry-prometheus"
@@ -60,24 +75,16 @@ dependencies {
     // SpringDoc OpenAPI
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
 
-    // Logging
-    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
-    implementation "ch.qos.logback:logback-core:${logbackVersion}"
-    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
-
-    // Spring Boot Actuator
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-    // Development Only
-    developmentOnly "org.springframework.boot:spring-boot-devtools"
-
     // Testing
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "io.projectreactor:reactor-test"
-
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
+    testImplementation 'org.eclipse.jetty:jetty-server:9.4.44.v20210927'
+    testImplementation 'org.eclipse.jetty:jetty-util:9.4.44.v20210927'
+    testImplementation 'org.eclipse.jetty:jetty-http:9.4.44.v20210927'
+    testImplementation 'org.eclipse.jetty:jetty-io:9.4.44.v20210927'
+    testImplementation 'org.eclipse.jetty:jetty-client:9.4.44.v20210927'
+    testImplementation 'org.eclipse.jetty:jetty-servlet:9.4.44.v20210927' // Add this line
+    testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
 
 dependencyManagement {
