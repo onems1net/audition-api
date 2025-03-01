@@ -14,9 +14,9 @@ import org.springframework.http.ProblemDetail;
 class AuditionLoggerTest {
 
     @Mock
-    private Logger logger;
+    private transient Logger logger;
 
-    private AuditionLogger auditionLogger;
+    private transient AuditionLogger auditionLogger;
 
     @BeforeEach
     void setUp() {

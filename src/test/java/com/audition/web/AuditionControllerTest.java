@@ -21,12 +21,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 class AuditionControllerTest {
 
     @Mock
-    private AuditionService auditionService;
+    private transient AuditionService auditionService;
 
     @InjectMocks
-    private AuditionController auditionController;
+    private transient AuditionController auditionController;
 
-    private MockMvc mockMvc;
+    private transient MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {

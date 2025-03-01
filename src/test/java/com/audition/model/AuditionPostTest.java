@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class AuditionPostTest {
 
-    private AuditionPost auditionPost;
+    private transient AuditionPost auditionPost;
 
     @BeforeEach
     void setUp() {

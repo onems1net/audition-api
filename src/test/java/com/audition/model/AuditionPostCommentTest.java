@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class AuditionPostCommentTest {
 
-    private AuditionPostComment auditionPostComment;
+    private transient AuditionPostComment auditionPostComment;
 
     @BeforeEach
     void setUp() {

@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 
 class SystemExceptionTest {
 
+    private static final String CAUSE = "Cause";
+    private static final String SYSTEM_ERROR_DETAIL = "System error detail";
+
     @Test
     void testDefaultConstructor() {
         SystemException exception = new SystemException();
@@ -39,7 +42,7 @@ class SystemExceptionTest {
     @Test
     void testConstructorWithMessageAndThrowable() {
         String message = "System error";
-        Throwable cause = new Throwable("Cause");
+        Throwable cause = new Throwable(CAUSE);
         SystemException exception = new SystemException(message, cause);
         assertEquals(message, exception.getMessage());
         assertEquals(SystemException.DEFAULT_TITLE, exception.getTitle());
@@ -50,53 +53,49 @@ class SystemExceptionTest {
 
     @Test
     void testConstructorWithDetailTitleAndErrorCode() {
-        String detail = "System error detail";
         String title = "System Error Title";
         Integer errorCode = 500;
-        SystemException exception = new SystemException(detail, title, errorCode);
-        assertEquals(detail, exception.getMessage());
+        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, errorCode);
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(title, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());
-        assertEquals(detail, exception.getDetail());
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getDetail());
     }
 
     @Test
     void testConstructorWithDetailTitleAndThrowable() {
-        String detail = "System error detail";
         String title = "System Error Title";
-        Throwable cause = new Throwable("Cause");
-        SystemException exception = new SystemException(detail, title, cause);
-        assertEquals(detail, exception.getMessage());
+        Throwable cause = new Throwable(CAUSE);
+        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, cause);
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(title, exception.getTitle());
         assertEquals(500, exception.getStatusCode());
-        assertEquals(detail, exception.getDetail());
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getDetail());
         assertEquals(cause, exception.getCause());
     }
 
     @Test
     void testConstructorWithDetailErrorCodeAndThrowable() {
-        String detail = "System error detail";
         Integer errorCode = 500;
-        Throwable cause = new Throwable("Cause");
-        SystemException exception = new SystemException(detail, errorCode, cause);
-        assertEquals(detail, exception.getMessage());
+        Throwable cause = new Throwable(CAUSE);
+        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, errorCode, cause);
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(SystemException.DEFAULT_TITLE, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());
-        assertEquals(detail, exception.getDetail());
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getDetail());
         assertEquals(cause, exception.getCause());
     }
 
     @Test
     void testConstructorWithDetailTitleErrorCodeAndThrowable() {
-        String detail = "System error detail";
         String title = "System Error Title";
         Integer errorCode = 500;
-        Throwable cause = new Throwable("Cause");
-        SystemException exception = new SystemException(detail, title, errorCode, cause);
-        assertEquals(detail, exception.getMessage());
+        Throwable cause = new Throwable(CAUSE);
+        SystemException exception = new SystemException(SYSTEM_ERROR_DETAIL, title, errorCode, cause);
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getMessage());
         assertEquals(title, exception.getTitle());
         assertEquals(errorCode, exception.getStatusCode());
-        assertEquals(detail, exception.getDetail());
+        assertEquals(SYSTEM_ERROR_DETAIL, exception.getDetail());
         assertEquals(cause, exception.getCause());
     }
 }

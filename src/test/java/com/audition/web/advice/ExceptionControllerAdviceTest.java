@@ -24,10 +24,10 @@ import org.springframework.web.context.request.WebRequest;
 class ExceptionControllerAdviceTest {
 
     @Mock
-    private AuditionLogger logger;
+    private transient AuditionLogger logger;
 
     @InjectMocks
-    private ExceptionControllerAdvice exceptionControllerAdvice;
+    private transient ExceptionControllerAdvice exceptionControllerAdvice;
 
     @BeforeEach
     void setUp() {

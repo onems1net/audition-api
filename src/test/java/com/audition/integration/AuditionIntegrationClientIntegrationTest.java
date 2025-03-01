@@ -1,44 +1,31 @@
 package com.audition.integration;
 
-import com.audition.common.exception.SystemException;
 import com.audition.model.AuditionPost;
 import com.audition.model.AuditionPostComment;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import com.github.tomakehurst.wiremock.http.Fault;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@WireMockTest(httpPort = 8080)
-@Disabled
+//@WireMockTest(httpPort = 8080)
 class AuditionIntegrationClientIntegrationTest {
 
     @Autowired
-    private AuditionIntegrationClient auditionIntegrationClient;
+    private transient AuditionIntegrationClient auditionIntegrationClient;
 
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @BeforeEach
-    void setUp() {
-        WireMock.reset();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        WireMock.reset();
+//    }
 
     @Test
     void testGetPosts() {
@@ -72,7 +59,7 @@ class AuditionIntegrationClientIntegrationTest {
         assertEquals(5, comments.size()); // Assuming the post has 5 comments
     }
 
-    @Test
+   /* @Test
     void testGetPostsThrowsHttpClientErrorException() {
         stubFor(get(urlEqualTo("/posts"))
             .willReturn(aResponse().withStatus(HttpStatus.BAD_REQUEST.value())));
@@ -110,5 +97,5 @@ class AuditionIntegrationClientIntegrationTest {
         SystemException thrown = assertThrows(SystemException.class, () -> auditionIntegrationClient.getPosts());
         assertEquals("Unexpected error", thrown.getMessage());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), thrown.getStatusCode());
-    }
+    }*/
 }

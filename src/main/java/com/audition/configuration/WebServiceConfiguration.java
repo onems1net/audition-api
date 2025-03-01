@@ -26,7 +26,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
+/**
+ * Configuration class for web services. Implements {@link WebMvcConfigurer} to customize the Spring MVC configuration.
+ */
 @Configuration
 public class WebServiceConfiguration implements WebMvcConfigurer {
 
@@ -38,21 +40,37 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
 
     private final transient AuditionLogger logger;
 
+    /**
+     * Constructor for WebServiceConfiguration.
+     *
+     * @param responseHeaderInjector the response header injector
+     * @param logger                 the audition logger
+     */
     @Autowired
     public WebServiceConfiguration(final ResponseHeaderInjector responseHeaderInjector, final AuditionLogger logger) {
         this.responseHeaderInjector = responseHeaderInjector;
         this.logger = logger;
     }
 
+    /**
+     * Adds interceptors to the registry.
+     *
+     * @param registry the interceptor registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(responseHeaderInjector);
     }
 
+    /**
+     * Configures and returns an {@link ObjectMapper} bean.
+     *
+     * @return the configured ObjectMapper
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd", Locale.forLanguageTag("en-AU")));
+        objectMapper.setDateFormat(new SimpleDateFormat(YEAR_MONTH_DAY_PATTERN, Locale.forLanguageTag("en-AU")));
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -61,6 +79,12 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
         return objectMapper;
     }
 
+    /**
+     * Configures and returns a {@link RestTemplate} bean.
+     *
+     * @param objectMapper the object mapper
+     * @return the configured RestTemplate
+     */
     @Bean
     public RestTemplate restTemplate(ObjectMapper objectMapper) {
         final RestTemplate restTemplate = new RestTemplate(
@@ -75,6 +99,11 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
         return restTemplate;
     }
 
+    /**
+     * Creates a logging interceptor for the RestTemplate.
+     *
+     * @return the logging interceptor
+     */
     private ClientHttpRequestInterceptor createLoggingInterceptor() {
         return (request, body, execution) -> {
             // Log request details
@@ -102,6 +131,11 @@ public class WebServiceConfiguration implements WebMvcConfigurer {
         };
     }
 
+    /**
+     * Creates a client request factory for the RestTemplate.
+     *
+     * @return the client request factory
+     */
     private SimpleClientHttpRequestFactory createClientFactory() {
         final SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setOutputStreaming(false);
