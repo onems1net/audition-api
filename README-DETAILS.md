@@ -12,7 +12,6 @@ such as distributed tracing, metrics collection, and custom logging.
 - Gradle
 - OpenTelemetry
 - SLF4J
-- Jakarta Servlet
 
 ## Project Structure
 
@@ -20,7 +19,14 @@ such as distributed tracing, metrics collection, and custom logging.
   HTTP responses.
 - `src/main/java/com/audition/common/logging/AuditionLogger.java`: Custom logger for standardized logging.
 - `src/main/java/com/audition/common/exception/SystemException.java`: Custom exception class for handling system errors.
+- `src/main/java/com/audition/web/AuditionController.java`: REST controller for handling API requests.
+- `src/main/java/com/audition/service/AuditionService.java`: Service layer for business logic.
+- `src/main/java/com/audition/integration/AuditionIntegrationClient.java`: Client for external service integration.
 - `src/main/resources/application.yml`: Configuration file for Spring Boot and other services.
+
+## OpenAPI Specification
+
+The OpenAPI specification for the Audition API can be found [here](docs/audition-api-openapi-spec.yml).
 
 ## Configuration
 
@@ -76,8 +82,9 @@ The `application.yml` file contains various configurations for the application:
     ```
 
 3. **Access Actuator Endpoints**:
-    - Health: `http://localhost:8080/actuator/health`
-    - Metrics: `http://localhost:8080/actuator/metrics`
+
+- Health: `http://localhost:8080/actuator/health`
+- Metrics: `http://localhost:8080/actuator/metrics`
 
 ## Logging
 
