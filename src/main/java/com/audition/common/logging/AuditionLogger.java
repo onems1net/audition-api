@@ -1,11 +1,11 @@
 package com.audition.common.logging;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Component;
 
 @Component
+@SuppressWarnings("PMD.TooManyMethods")
 public class AuditionLogger {
 
     public void info(final Logger logger, final String message) {
@@ -17,6 +17,12 @@ public class AuditionLogger {
     public void info(final Logger logger, final String message, final Object object) {
         if (logger.isInfoEnabled()) {
             logger.info(message, object);
+        }
+    }
+
+    public void info(final Logger logger, final String message, final Object... objects) {
+        if (logger.isInfoEnabled()) {
+            logger.info(message, objects);
         }
     }
 
@@ -53,17 +59,19 @@ public class AuditionLogger {
 
     public void logHttpStatusCodeError(final Logger logger, final String message, final Integer errorCode) {
         if (logger.isErrorEnabled()) {
-            logger.error(createBasicErrorResponseMessage(errorCode, message) + "\n");
+            logger.error("{}\n", createBasicErrorResponseMessage(errorCode, message));
         }
     }
 
     private String createStandardProblemDetailMessage(final ProblemDetail standardProblemDetail) {
-        // TODO Add implementation here.
-        return StringUtils.EMPTY;
+        return String.format("Status: %s, Title: %s, Detail: %s, Instance: %s",
+            standardProblemDetail.getStatus(),
+            standardProblemDetail.getTitle(),
+            standardProblemDetail.getDetail(),
+            standardProblemDetail.getInstance());
     }
 
     private String createBasicErrorResponseMessage(final Integer errorCode, final String message) {
-        // TODO Add implementation here.
-        return StringUtils.EMPTY;
+        return String.format("Error Code: %d, Message: %s", errorCode, message);
     }
 }

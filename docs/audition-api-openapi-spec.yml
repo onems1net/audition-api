@@ -1,0 +1,101 @@
+openapi: 3.0.1
+info:
+  title: Audition API
+  description: API for managing audition posts and comments
+  version: 1.0.0
+paths:
+  /posts:
+    get:
+      summary: Get all posts
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: Filter posts by title
+      responses:
+        '200':
+          description: A list of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditionPost'
+  /posts/{id}:
+    get:
+      summary: Get a post by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the post
+      responses:
+        '200':
+          description: A single post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditionPost'
+  /posts/{id}/comments:
+    get:
+      summary: Get a post with comments by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the post
+      responses:
+        '200':
+          description: A single post with comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditionPost'
+  /comments/{postId}:
+    get:
+      summary: Get comments by post ID
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+          description: The ID of the post
+      responses:
+        '200':
+          description: A list of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditionPostComment'
+components:
+  schemas:
+    AuditionPost:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditionPostComment'
+    AuditionPostComment:
+      type: object
+      properties:
+        id:
+          type: string
+        postId:
+          type: string
+        content:
+          type: string

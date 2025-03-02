@@ -10,19 +10,46 @@ spring:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   mvc:
     throw-exception-if-no-handler-found: true
+
   sleuth:
+    enabled: true
     sampler:
       probability: 1.0
+    otel:
+      enabled: true
+      config:
+        trace-id-ratio-based: 1.0 # Sample all traces
+
 server:
   max-http-request-header-size: 16KB
 management:
   tracing:
+    enabled: true
     sampling:
       probability: 1.0
   endpoints:
     web:
       exposure:
-        include: '*' #TODO enable only info and health for security purposes. Consider that we may want to still access other actuator endpoints securely.
+        include: 'info,health'
+  endpoint:
+    health:
+      show-details: 'always'
+  security:
+    enabled: true
+    roles: ACTUATOR
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  traces:
+    exporter: otlp
+    sampler: always_on
+
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+audition:
+  integration:
+    base-url: https://jsonplaceholder.typicode.com/
