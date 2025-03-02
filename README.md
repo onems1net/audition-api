@@ -83,4 +83,4 @@ Applicants need to do the following to submit their work:
 
 ## Additional Information based on the implementation
 
-[Refer](README-DETAILS.md)
+[Open](README-DETAILS.md)

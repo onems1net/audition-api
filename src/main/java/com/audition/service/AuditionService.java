@@ -4,7 +4,6 @@ import com.audition.integration.AuditionIntegrationClient;
 import com.audition.model.AuditionPost;
 import com.audition.model.AuditionPostComment;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +19,6 @@ public class AuditionService {
      *
      * @param auditionIntegrationClient the audition integration client
      */
-    @Autowired
     public AuditionService(final AuditionIntegrationClient auditionIntegrationClient) {
         this.auditionIntegrationClient = auditionIntegrationClient;
     }

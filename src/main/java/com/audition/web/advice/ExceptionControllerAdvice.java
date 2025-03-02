@@ -5,7 +5,6 @@ import com.audition.common.logging.AuditionLogger;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -33,7 +32,6 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
     private final transient AuditionLogger logger;
 
-    @Autowired
     public ExceptionControllerAdvice(final AuditionLogger logger) {
         super();
         this.logger = logger;

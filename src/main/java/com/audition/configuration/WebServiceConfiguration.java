@@ -30,7 +30,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Configuration class for web services. Implements {@link WebMvcConfigurer} to customize the Spring MVC configuration.
  */
 @Configuration
-@SuppressWarnings("squid:S3457")
 public class WebServiceConfiguration implements WebMvcConfigurer {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebServiceConfiguration.class);
