@@ -94,12 +94,12 @@ public class AuditionIntegrationClient {
         try {
             return call.execute();
         } catch (HttpClientErrorException exc) {
-            throw new SystemException("HTTP error", exc.getMessage(), exc.getStatusCode().value(), exc);
+            throw new SystemException("Client error", exc.getMessage(), exc.getStatusCode().value(), exc);
         } catch (ResourceAccessException exc) {
             throw new SystemException("Resource access error", exc.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value(),
                 exc);
         } catch (RestClientException exc) {
-            throw new SystemException("Client error", exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), exc);
+            throw new SystemException("Server error", exc.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), exc);
         }
     }
 

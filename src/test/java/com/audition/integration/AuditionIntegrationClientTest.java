@@ -31,7 +31,7 @@ class AuditionIntegrationClientTest {
     private static final String POSTS_SLASH = "posts/";
     private static final String COMMENTS_BY_POST_ID = "comments?postId=";
     private static final String BAD_REQUEST = "Bad Request";
-    private static final String HTTP_ERROR = "HTTP error";
+    private static final String CLIENT_ERROR = "Client error";
 
     @Mock
     private transient RestTemplate restTemplate;
@@ -97,7 +97,7 @@ class AuditionIntegrationClientTest {
         when(restTemplate.getForObject(BASE_URL + POSTS, AuditionPost[].class)).thenThrow(exception);
 
         final SystemException thrown = assertThrows(SystemException.class, () -> auditionIntegrationClient.getPosts());
-        assertEquals(HTTP_ERROR, thrown.getMessage());
+        assertEquals(CLIENT_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
     }
 
@@ -125,7 +125,7 @@ class AuditionIntegrationClientTest {
 
         final SystemException thrown = assertThrows(SystemException.class,
             () -> auditionIntegrationClient.getPostById(postId));
-        assertEquals(HTTP_ERROR, thrown.getMessage());
+        assertEquals(CLIENT_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
     }
 
@@ -156,7 +156,7 @@ class AuditionIntegrationClientTest {
 
         final SystemException thrown = assertThrows(SystemException.class,
             () -> auditionIntegrationClient.getPostWithCommentsById(postId));
-        assertEquals(HTTP_ERROR, thrown.getMessage());
+        assertEquals(CLIENT_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
     }
 
@@ -188,7 +188,7 @@ class AuditionIntegrationClientTest {
 
         final SystemException thrown = assertThrows(SystemException.class,
             () -> auditionIntegrationClient.getCommentsByPostId(postId));
-        assertEquals(HTTP_ERROR, thrown.getMessage());
+        assertEquals(CLIENT_ERROR, thrown.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST.value(), thrown.getStatusCode());
     }
 
